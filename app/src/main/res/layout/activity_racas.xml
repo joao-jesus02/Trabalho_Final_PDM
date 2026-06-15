@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bestiário - Cadastro de Criaturas"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="25dp" />
+    <EditText
+        android:id="@+id/edtNomeRaca"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nome da Criatura" />
+    <EditText
+        android:id="@+id/edtDescricaoRaca"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Descrição"
+        android:layout_marginTop="8dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/imgPreview"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:src="@android:drawable/ic_menu_camera" />
+        <Button
+            android:id="@+id/btnSelecionarImagem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:text="Selecionar Imagem"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnSalvarRaca"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="SALVAR CRIATURA"
+            android:textColor="@android:color/white" />
+        <Button
+            android:id="@+id/btnEcluir"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="6dp"
+            android:text="Excluir" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/txtNomeAudio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:ellipsize="middle"
+        android:maxLines="1"
+        android:text="Nenhum áudio associado"
+        android:textStyle="italic" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnSelecionarAudio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Selecionar Áudio" />
+        <Button
+            android:id="@+id/btnGravarAudio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_weight="1"
+            android:text="Gravar Áudio" />
+    </LinearLayout>
+    <Button
+        android:id="@+id/btnReproduzirAudio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reproduzir Áudio" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnFicha"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ficha" />
+        <Button
+            android:id="@+id/btnFavoritos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Favoritos" />
+        <Button
+            android:id="@+id/btnDados"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Dados" />
+        <Button
+            android:id="@+id/btnEncontro"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Encontro" />
+    </LinearLayout>
+    <EditText
+        android:id="@+id/edtBuscar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Buscar criatura"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginVertical="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Criaturas Cadastradas:"
+        android:textStyle="italic" />
+
+    <ListView
+        android:id="@+id/lvRacas"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1" />
+
+
+</LinearLayout>
