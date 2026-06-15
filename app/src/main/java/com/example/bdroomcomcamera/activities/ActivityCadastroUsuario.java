@@ -2,15 +2,20 @@ package com.example.bdroomcomcamera.activities;
 
 
 import android.Manifest;
+import android.content.res.ColorStateList;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -37,6 +42,8 @@ public class ActivityCadastroUsuario extends AppCompatActivity {
     Uri imageUri;
     private EditText edtNome, edtEmail, edtSenha;
     private ImageView imgFoto;
+    private ProgressBar progressForcaSenha;
+    private TextView txtForcaSenha;
     private Bitmap fotoBitmap;
     private AppDatabase db;
     private Button btnCadastrar;
@@ -50,14 +57,61 @@ public class ActivityCadastroUsuario extends AppCompatActivity {
         edtEmail = findViewById(R.id.edtEmail);
         edtSenha = findViewById(R.id.edtSenha);
         imgFoto = findViewById(R.id.imgFoto);
+        progressForcaSenha = findViewById(R.id.progressForcaSenha);
+        txtForcaSenha = findViewById(R.id.txtForcaSenha);
         imgFoto.setContentDescription("Foto do usuário");
         Button btnCadaster = findViewById(R.id.btnCadastrar);
 
         db = DatabaseProvider.getDatabase(getApplicationContext());
         imageUri=createUri();
         registerPictureLauncher();
+        configurarIndicadorSenha();
 
         btnCadaster.setOnClickListener(v -> cadastrarUsuario());
+    }
+
+    private void configurarIndicadorSenha() {
+        edtSenha.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                atualizarForcaSenha(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void atualizarForcaSenha(String senha) {
+        int score = SecurityUtils.passwordStrengthScore(senha);
+        progressForcaSenha.setProgress(score);
+
+        int cor;
+        String nivel;
+        if (senha.isEmpty()) {
+            cor = R.color.password_weak;
+            nivel = "Use 8+ caracteres, maiúscula, minúscula, número e símbolo";
+        } else if (score <= 2) {
+            cor = R.color.password_weak;
+            nivel = "Senha fraca";
+        } else if (score <= 4) {
+            cor = R.color.password_medium;
+            nivel = "Senha média: ainda faltam requisitos";
+        } else {
+            cor = R.color.password_strong;
+            nivel = "Senha forte";
+        }
+
+        progressForcaSenha.setProgressTintList(
+                ColorStateList.valueOf(getColor(cor))
+        );
+        txtForcaSenha.setText(nivel);
+        txtForcaSenha.setTextColor(getColor(cor));
     }
 
     private void cadastrarUsuario() {

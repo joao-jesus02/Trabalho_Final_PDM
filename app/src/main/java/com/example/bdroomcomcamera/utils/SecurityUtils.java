@@ -18,10 +18,15 @@ public final class SecurityUtils {
     }
 
     public static boolean isStrongPassword(String password) {
-        if (password == null || password.length() < 8) {
-            return false;
+        return passwordStrengthScore(password) == 5;
+    }
+
+    public static int passwordStrengthScore(String password) {
+        if (password == null || password.isEmpty()) {
+            return 0;
         }
 
+        int score = password.length() >= 8 ? 1 : 0;
         boolean hasUpper = false;
         boolean hasLower = false;
         boolean hasDigit = false;
@@ -39,7 +44,11 @@ public final class SecurityUtils {
             }
         }
 
-        return hasUpper && hasLower && hasDigit && hasSpecial;
+        if (hasUpper) score++;
+        if (hasLower) score++;
+        if (hasDigit) score++;
+        if (hasSpecial) score++;
+        return score;
     }
 
     public static String hashPassword(String password) {

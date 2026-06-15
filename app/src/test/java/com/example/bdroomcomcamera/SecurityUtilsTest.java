@@ -33,6 +33,13 @@ public class SecurityUtilsTest {
     }
 
     @Test
+    public void indicadorDeForca_devePontuarRequisitosAtendidos() {
+        assertTrue(SecurityUtils.passwordStrengthScore("abc") < 3);
+        assertTrue(SecurityUtils.passwordStrengthScore("Senha123") >= 4);
+        assertTrue(SecurityUtils.passwordStrengthScore("Senha@123") == 5);
+    }
+
+    @Test
     public void hashNaoDeveGuardarSenhaEmTextoPuro() {
         String hash = SecurityUtils.hashPassword("Senha@123");
         assertNotEquals("Senha@123", hash);
