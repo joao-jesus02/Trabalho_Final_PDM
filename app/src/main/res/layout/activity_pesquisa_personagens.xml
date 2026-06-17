@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Pesquisar Personagens"
+        android:textColor="@color/app_text_primary"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Toque em um resultado para visualizar a ficha."
+        android:textColor="@color/app_text_secondary"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/edtPesquisarPersonagem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:hint="Buscar por nome, tipo ou habitat"
+        android:inputType="textCapSentences"
+        android:padding="10dp"
+        android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/txtQuantidadeResultados"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Personagens encontrados: 0"
+        android:textColor="@color/app_text_secondary"
+        android:textStyle="italic" />
+
+    <ListView
+        android:id="@+id/lvPersonagens"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/btnVoltarPesquisa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Voltar" />
+
+</LinearLayout>

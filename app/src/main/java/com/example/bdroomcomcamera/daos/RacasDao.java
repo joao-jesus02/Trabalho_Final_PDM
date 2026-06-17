@@ -14,7 +14,7 @@ import java.util.List;
 public interface RacasDao {
 
     @Insert
-    void inserir(Racas raca);
+    long inserir(Racas raca);
 
     @Update
     void atualizar(Racas raca);
@@ -30,6 +30,9 @@ public interface RacasDao {
 
     @Query("SELECT * FROM racas WHERE usuarioId = :usuarioId ORDER BY nomeRaca")
     List<Racas> obterTodasRacasDoUsuario(int usuarioId);
+
+    @Query("SELECT * FROM racas WHERE id = :id AND usuarioId = :usuarioId LIMIT 1")
+    Racas obterRacaDoUsuarioPorId(int usuarioId, int id);
 
     @Query("SELECT * FROM racas WHERE usuarioId = :usuarioId AND " +
             "(nomeRaca LIKE '%' || :texto || '%' OR tipo LIKE '%' || :texto || '%' OR habitat LIKE '%' || :texto || '%') " +

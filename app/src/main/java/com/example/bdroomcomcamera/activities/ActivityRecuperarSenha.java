@@ -1,16 +1,19 @@
 package com.example.bdroomcomcamera.activities;
 
-import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.bdroomcomcamera.R;
 import com.example.bdroomcomcamera.database.AppDatabase;
 import com.example.bdroomcomcamera.database.DatabaseProvider;
 import com.example.bdroomcomcamera.databinding.ActivityRecuperarSenhaBinding;
 import com.example.bdroomcomcamera.entities.Usuario;
+import com.example.bdroomcomcamera.utils.PasswordStrengthUi;
 import com.example.bdroomcomcamera.utils.SecurityUtils;
+import com.example.bdroomcomcamera.utils.SoundUtils;
+import com.example.bdroomcomcamera.utils.ThemeUtils;
 
 import java.util.Locale;
 import java.util.Random;
@@ -21,19 +24,44 @@ public class ActivityRecuperarSenha extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeUtils.applySavedMode(this);
         super.onCreate(savedInstanceState);
         binding = ActivityRecuperarSenhaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         db = DatabaseProvider.getDatabase(getApplicationContext());
+        configurarIndicadorSenha();
         binding.btnSalvarNovaSenha.setOnClickListener(v -> {
 
-            MediaPlayer mediaPlayer =
-                    MediaPlayer.create(this, R.raw.click);
-
-            mediaPlayer.start();
+            SoundUtils.tocarClique(this);
 
             RedefinirSenha();
         });
+    }
+
+    private void configurarIndicadorSenha() {
+        binding.edtNovaSenha.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                atualizarForcaSenha(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void atualizarForcaSenha(String entrada) {
+        PasswordStrengthUi.updateForRecoveryInput(
+                this,
+                binding.progressForcaNovaSenha,
+                binding.txtForcaNovaSenha,
+                entrada
+        );
     }
 
     private void RedefinirSenha() {

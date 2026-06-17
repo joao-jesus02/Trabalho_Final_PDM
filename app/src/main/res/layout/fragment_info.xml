@@ -1,34 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:background="@color/app_background"
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Mystic Creatures"
-        android:textSize="24sp"
-        android:textStyle="bold"/>
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="Bestiário para cadastrar criaturas, fichas, imagens, áudios e favoritos de campanhas de RPG."
-        android:textSize="18sp"/>
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:gravity="center"
-        android:text="Cada usuário possui suas próprias criaturas e uma tabela separada para seus favoritos."
-        android:textSize="16sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Mystic Creatures"
+            android:textColor="@color/app_text_primary"
+            android:textSize="26sp"
+            android:textStyle="bold" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:text="Aplicativo de bestiário para RPG de mesa, criado para cadastrar, consultar e organizar criaturas, NPCs e monstros de campanha."
+            android:textColor="@color/app_text_primary"
+            android:textSize="17sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="Características do app"
+            android:textColor="@color/app_section_title"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="• Cadastro e login de usuários.\n• Senhas protegidas com hash.\n• Validação de e-mail e força da senha.\n• Recuperação de senha com código.\n• Cadastro de criaturas com imagem e áudio.\n• Ficha de RPG com nível, PV, defesa, ataques, habilidades, fraquezas e recompensas.\n• Pesquisa de personagens já cadastrados.\n• Favoritos em tabela separada.\n• Tema claro/escuro controlado pelo app."
+            android:textColor="@color/app_text_secondary"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="Recursos Android utilizados"
+            android:textColor="@color/app_section_title"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="• Room Database para persistência local.\n• Fragments na tela Sobre o App.\n• Câmera para foto do usuário.\n• Armazenamento e exibição de imagens.\n• Seleção, gravação e reprodução de áudio.\n• Notificações de cadastro/atualização.\n• Busca em listas de criaturas.\n• Tema DayNight com suporte a modo claro e escuro."
+            android:textColor="@color/app_text_secondary"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="Compatibilidade"
+            android:textColor="@color/app_section_title"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Sistema: Android 7.0 Nougat ou superior.\nAPI mínima: 24.\nAPI alvo: 35.\nDesenvolvido em Java com Android Studio."
+            android:textColor="@color/app_text_secondary"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/btnModoEscuro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Tema do app" />
+    </LinearLayout>
+</ScrollView>

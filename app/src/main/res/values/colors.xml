@@ -17,5 +17,11 @@
     <color name="password_weak">#C62828</color>
     <color name="password_medium">#F9A825</color>
     <color name="password_strong">#2E7D32</color>
+    <color name="app_background">#FCF6FC</color>
+    <color name="app_text_primary">#3F3748</color>
+    <color name="app_text_secondary">#5A5361</color>
+    <color name="app_section_title">#5E4B8B</color>
+    <color name="app_link">#3F51B5</color>
+    <color name="app_divider">#9E9E9E</color>
 
 </resources>

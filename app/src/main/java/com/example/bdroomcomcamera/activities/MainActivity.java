@@ -1,7 +1,6 @@
 package com.example.bdroomcomcamera.activities;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -13,6 +12,8 @@ import com.example.bdroomcomcamera.database.DatabaseProvider;
 import com.example.bdroomcomcamera.databinding.ActivityMainBinding;
 import com.example.bdroomcomcamera.entities.Usuario;
 import com.example.bdroomcomcamera.utils.SecurityUtils;
+import com.example.bdroomcomcamera.utils.SoundUtils;
+import com.example.bdroomcomcamera.utils.ThemeUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeUtils.applySavedMode(this);
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -49,20 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 🔊 MÉTODO PARA TOCAR SOM (CORRIGIDO)
     private void tocarSom() {
-
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.click);
-
-        if (mediaPlayer != null) {
-
-            mediaPlayer.setOnCompletionListener(mp -> {
-                mp.release();
-            });
-
-            mediaPlayer.start();
-
-        } else {
-            Toast.makeText(this, "Erro ao tocar som", Toast.LENGTH_SHORT).show();
-        }
+        SoundUtils.tocarClique(this);
     }
 
     public void Cadastrar() {
@@ -101,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             Intent it = new Intent(MainActivity.this, ActivityLogin.class);
-            it.putExtra("usuario_logado", usuario);
+            it.putExtra("usuario_id", usuario.getId());
             startActivity(it);
 
         } else {

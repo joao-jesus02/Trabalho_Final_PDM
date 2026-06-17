@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTituloFicha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:text="Ficha da Criatura"
+                android:textColor="@color/app_text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtDescricaoFicha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="@color/app_text_secondary"
+                android:textStyle="italic" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Identidade"
+                android:textColor="@color/app_section_title"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edtTipo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:hint="Tipo"
+                    android:inputType="textCapSentences" />
+
+                <EditText
+                    android:id="@+id/edtAlinhamento"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Alinhamento"
+                    android:inputType="textCapSentences" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edtHabitat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Habitat / região"
+                android:inputType="textCapSentences" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Combate"
+                android:textColor="@color/app_section_title"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edtNivel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="6dp"
+                    android:layout_weight="1"
+                    android:hint="Nível"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/edtPontosVida"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="6dp"
+                    android:layout_weight="1"
+                    android:hint="PV"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/edtDefesa"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="6dp"
+                    android:layout_weight="1"
+                    android:hint="Defesa"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/edtDificuldade"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Dif."
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edtAtaques"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ataques e dano. Ex: Mordida 2d6+3"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="2" />
+
+            <EditText
+                android:id="@+id/edtHabilidades"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Habilidades especiais"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edtFraquezas"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:hint="Fraquezas"
+                    android:inputType="textCapSentences" />
+
+                <EditText
+                    android:id="@+id/edtResistencias"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Resistências"
+                    android:inputType="textCapSentences" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Campanha"
+                android:textColor="@color/app_section_title"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtRecompensas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="XP, tesouro e itens encontrados"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="2" />
+
+            <EditText
+                android:id="@+id/edtAnotacoesMestre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Anotações do mestre"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="2" />
+
+            <CheckBox
+                android:id="@+id/chkFavoritoFicha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Marcar como favorito" />
+
+            <Button
+                android:id="@+id/btnSalvarFicha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Salvar ficha" />
+
+            <Button
+                android:id="@+id/btnVoltarCadastro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Voltar ao cadastro" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

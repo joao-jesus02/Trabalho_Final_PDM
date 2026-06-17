@@ -1,0 +1,10 @@
+<resources>
+
+    <color name="app_background">#161218</color>
+    <color name="app_text_primary">#F3ECF6</color>
+    <color name="app_text_secondary">#D8CFE0</color>
+    <color name="app_section_title">#D7B8FF</color>
+    <color name="app_link">#BFD0FF</color>
+    <color name="app_divider">#5F5666</color>
+
+</resources>

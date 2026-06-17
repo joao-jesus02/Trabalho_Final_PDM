@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
@@ -19,11 +18,9 @@ import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,10 +37,11 @@ import com.example.bdroomcomcamera.R;
 import com.example.bdroomcomcamera.database.AppDatabase;
 import com.example.bdroomcomcamera.database.DatabaseProvider;
 import com.example.bdroomcomcamera.databinding.ActivityRacasBinding;
-import com.example.bdroomcomcamera.entities.Favorito;
 import com.example.bdroomcomcamera.entities.Racas;
+import com.example.bdroomcomcamera.utils.ImageUtils;
+import com.example.bdroomcomcamera.utils.SoundUtils;
+import com.example.bdroomcomcamera.utils.ThemeUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,7 +70,7 @@ public class ActivityRacas extends AppCompatActivity {
     private int usuarioId;
     private ActivityResultLauncher<String[]> selecionarAudioLauncher;
     private MediaRecorder mediaRecorder;
-    private MediaPlayer audioPlayer;
+    private android.media.MediaPlayer audioPlayer;
     private boolean gravandoAudio = false;
     private String audioUriSelecionado;
     private String audioNomeSelecionado;
@@ -81,6 +79,7 @@ public class ActivityRacas extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        ThemeUtils.applySavedMode(this);
         super.onCreate(savedInstanceState);
 
         binding = ActivityRacasBinding.inflate(getLayoutInflater());
@@ -144,10 +143,7 @@ public class ActivityRacas extends AppCompatActivity {
         // SALVAR
         binding.btnSalvarRaca.setOnClickListener(view -> {
 
-            MediaPlayer mediaPlayer =
-                    MediaPlayer.create(this, R.raw.click);
-
-            mediaPlayer.start();
+            SoundUtils.tocarClique(this);
 
             salvar();
 
@@ -156,10 +152,7 @@ public class ActivityRacas extends AppCompatActivity {
         // EXCLUIR
         binding.btnEcluir.setOnClickListener(view -> {
 
-            MediaPlayer mediaPlayer =
-                    MediaPlayer.create(this, R.raw.click);
-
-            mediaPlayer.start();
+            SoundUtils.tocarClique(this);
 
             excluir();
 
@@ -172,7 +165,7 @@ public class ActivityRacas extends AppCompatActivity {
 
         binding.btnReproduzirAudio.setOnClickListener(view -> reproduzirAudio());
 
-        binding.btnFicha.setOnClickListener(view -> abrirFichaCompleta());
+        binding.btnFicha.setOnClickListener(view -> abrirTelaFicha());
         binding.btnFavoritos.setOnClickListener(view -> alternarFavoritos());
         binding.btnDados.setOnClickListener(view -> abrirRoladorDados());
         binding.btnEncontro.setOnClickListener(view -> abrirGeradorEncontro());
@@ -182,30 +175,26 @@ public class ActivityRacas extends AppCompatActivity {
 
             racaParaEditar = listaRacas.get(position);
 
-            binding.edtNomeRaca.setText(
-                    racaParaEditar.getNomeRaca()
-            );
-
-            binding.edtDescricaoRaca.setText(
-                    racaParaEditar.getDescricao()
-            );
+            binding.edtNomeRaca.setText(racaParaEditar.getNomeRaca());
+            binding.edtDescricaoRaca.setText(racaParaEditar.getDescricao());
 
             if (racaParaEditar.getImagem() != null) {
 
-                Bitmap bitmap = BitmapFactory.decodeByteArray(
-                        racaParaEditar.getImagem(),
-                        0,
-                        racaParaEditar.getImagem().length
-                );
+                Bitmap bitmap = ImageUtils.decodeByteArrayReduced(racaParaEditar.getImagem());
 
-                binding.imgPreview.setImageBitmap(bitmap);
+                if (bitmap != null) {
+                    binding.imgPreview.setImageBitmap(bitmap);
+                }
 
                 imagemSelecionada = racaParaEditar.getImagem();
+            } else {
+                binding.imgPreview.setImageResource(android.R.drawable.ic_menu_camera);
+                imagemSelecionada = null;
             }
             audioUriSelecionado = racaParaEditar.getAudioUri();
             audioNomeSelecionado = racaParaEditar.getAudioNome();
             atualizarNomeAudio();
-            binding.btnSalvarRaca.setText("ATUALIZAR");
+            binding.btnSalvarRaca.setText("Atualizar");
 
         });
     }
@@ -213,10 +202,10 @@ public class ActivityRacas extends AppCompatActivity {
     private void salvar() {
 
         String nome =
-                binding.edtNomeRaca.getText().toString();
+                binding.edtNomeRaca.getText().toString().trim();
 
         String desc =
-                binding.edtDescricaoRaca.getText().toString();
+                binding.edtDescricaoRaca.getText().toString().trim();
 
         if (nome.isEmpty() || desc.isEmpty()) {
 
@@ -245,15 +234,14 @@ public class ActivityRacas extends AppCompatActivity {
             novaRaca.setUsuarioId(usuarioId);
             novaRaca.setAudioUri(audioUriSelecionado);
             novaRaca.setAudioNome(audioNomeSelecionado);
-            novaRaca.setNivel(1);
-            novaRaca.setDificuldade(1);
 
-            db.racasDao().inserir(novaRaca);
+            long novoId = db.racasDao().inserir(novaRaca);
+            novaRaca.setId((int) novoId);
 
             Toast.makeText(
                     this,
-                    "Criatura cadastrada!",
-                    Toast.LENGTH_SHORT
+                    "Criatura salva na lista!",
+                    Toast.LENGTH_LONG
             ).show();
             notificar("Raça cadastrada", nome + " foi salva no banco.");
 
@@ -280,14 +268,24 @@ public class ActivityRacas extends AppCompatActivity {
             notificar("Raça atualizada", nome + " foi atualizada no banco.");
         }
 
-        limparCampos();
-
+        mostrandoFavoritos = false;
+        binding.btnFavoritos.setText("Fav.");
+        binding.edtBuscar.setText("");
         atualizarLista();
+        limparCampos();
     }
 
     public void excluir() {
 
         if (racaParaEditar == null) {
+            if (formularioPreenchido()) {
+                Toast.makeText(
+                        this,
+                        "Para cadastrar essa criatura, toque em Salvar.",
+                        Toast.LENGTH_LONG
+                ).show();
+                return;
+            }
 
             Toast.makeText(
                     this,
@@ -392,7 +390,14 @@ public class ActivityRacas extends AppCompatActivity {
 
         racaParaEditar = null;
 
-        binding.btnSalvarRaca.setText("SALVAR");
+        binding.btnSalvarRaca.setText("Salvar");
+    }
+
+    private boolean formularioPreenchido() {
+        return !binding.edtNomeRaca.getText().toString().trim().isEmpty()
+                || !binding.edtDescricaoRaca.getText().toString().trim().isEmpty()
+                || imagemSelecionada != null
+                || audioUriSelecionado != null;
     }
 
     private ArrayAdapter<Racas> criarAdapterComImagem(List<Racas> racas) {
@@ -410,7 +415,7 @@ public class ActivityRacas extends AppCompatActivity {
                     texto.setText(favorito + raca.getNomeRaca() + nivel);
                     byte[] bytes = raca.getImagem();
                     if (bytes != null && bytes.length > 0) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        Bitmap bitmap = ImageUtils.decodeThumbnail(bytes);
                         imagem.setImageBitmap(bitmap);
                     } else {
                         imagem.setImageResource(android.R.drawable.ic_menu_camera);
@@ -441,24 +446,11 @@ public class ActivityRacas extends AppCompatActivity {
 
             try {
 
-                Bitmap bitmap =
-                        MediaStore.Images.Media.getBitmap(
-                                this.getContentResolver(),
-                                uri
-                        );
+                Bitmap bitmap = ImageUtils.decodeUriReduced(getContentResolver(), uri);
 
                 binding.imgPreview.setImageBitmap(bitmap);
 
-                ByteArrayOutputStream stream =
-                        new ByteArrayOutputStream();
-
-                bitmap.compress(
-                        Bitmap.CompressFormat.JPEG,
-                        70,
-                        stream
-                );
-
-                imagemSelecionada = stream.toByteArray();
+                imagemSelecionada = ImageUtils.compressToJpeg(bitmap);
 
             } catch (IOException e) {
 
@@ -572,10 +564,10 @@ public class ActivityRacas extends AppCompatActivity {
         }
 
         liberarPlayer();
-        audioPlayer = new MediaPlayer();
+        audioPlayer = new android.media.MediaPlayer();
         try {
             audioPlayer.setDataSource(this, Uri.parse(audioUriSelecionado));
-            audioPlayer.setOnPreparedListener(MediaPlayer::start);
+            audioPlayer.setOnPreparedListener(android.media.MediaPlayer::start);
             audioPlayer.setOnCompletionListener(player -> liberarPlayer());
             audioPlayer.prepareAsync();
         } catch (IOException | SecurityException e) {
@@ -617,70 +609,16 @@ public class ActivityRacas extends AppCompatActivity {
         );
     }
 
-    // Exibe uma ficha completa sem substituir o cadastro simples da tela principal.
-    private void abrirFichaCompleta() {
+    private void abrirTelaFicha() {
         if (racaParaEditar == null) {
-            Toast.makeText(this, "Selecione uma criatura da lista primeiro.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Selecione uma criatura da lista para abrir a ficha.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        LinearLayout formulario = new LinearLayout(this);
-        formulario.setOrientation(LinearLayout.VERTICAL);
-        formulario.setPadding(32, 16, 32, 16);
-
-        EditText tipo = criarCampo(formulario, "Tipo (dragão, morto-vivo, NPC...)", racaParaEditar.getTipo(), false);
-        EditText habitat = criarCampo(formulario, "Habitat", racaParaEditar.getHabitat(), false);
-        EditText alinhamento = criarCampo(formulario, "Alinhamento / comportamento", racaParaEditar.getAlinhamento(), false);
-        EditText nivel = criarCampo(formulario, "Nível", String.valueOf(racaParaEditar.getNivel()), true);
-        EditText vida = criarCampo(formulario, "Pontos de vida", String.valueOf(racaParaEditar.getPontosVida()), true);
-        EditText defesa = criarCampo(formulario, "Defesa", String.valueOf(racaParaEditar.getDefesa()), true);
-        EditText dificuldade = criarCampo(formulario, "Dificuldade do encontro (1-20)", String.valueOf(racaParaEditar.getDificuldade()), true);
-        EditText ataques = criarCampo(formulario, "Ataques e dano, ex.: Mordida 2d6+3", racaParaEditar.getAtaques(), false);
-        EditText habilidades = criarCampo(formulario, "Habilidades especiais", racaParaEditar.getHabilidades(), false);
-        EditText fraquezas = criarCampo(formulario, "Fraquezas", racaParaEditar.getFraquezas(), false);
-        EditText resistencias = criarCampo(formulario, "Resistências e imunidades", racaParaEditar.getResistencias(), false);
-        EditText recompensas = criarCampo(formulario, "XP, moedas e itens derrubados", racaParaEditar.getRecompensas(), false);
-        EditText mestre = criarCampo(formulario, "Anotações secretas do mestre", racaParaEditar.getAnotacoesMestre(), false);
-        CheckBox favorito = new CheckBox(this);
-        favorito.setText("Adicionar aos favoritos");
-        favorito.setChecked(db.favoritoDao().estaFavoritada(usuarioId, racaParaEditar.getId()));
-        formulario.addView(favorito);
-
-        ScrollView scroll = new ScrollView(this);
-        scroll.addView(formulario);
-
-        new AlertDialog.Builder(this)
-                .setTitle("Ficha: " + racaParaEditar.getNomeRaca())
-                .setView(scroll)
-                .setPositiveButton("Salvar ficha", (dialog, which) -> {
-                    racaParaEditar.setTipo(tipo.getText().toString().trim());
-                    racaParaEditar.setHabitat(habitat.getText().toString().trim());
-                    racaParaEditar.setAlinhamento(alinhamento.getText().toString().trim());
-                    racaParaEditar.setNivel(numero(nivel));
-                    racaParaEditar.setPontosVida(numero(vida));
-                    racaParaEditar.setDefesa(numero(defesa));
-                    racaParaEditar.setDificuldade(numero(dificuldade));
-                    racaParaEditar.setAtaques(ataques.getText().toString().trim());
-                    racaParaEditar.setHabilidades(habilidades.getText().toString().trim());
-                    racaParaEditar.setFraquezas(fraquezas.getText().toString().trim());
-                    racaParaEditar.setResistencias(resistencias.getText().toString().trim());
-                    racaParaEditar.setRecompensas(recompensas.getText().toString().trim());
-                    racaParaEditar.setAnotacoesMestre(mestre.getText().toString().trim());
-                    db.racasDao().atualizar(racaParaEditar);
-                    if (favorito.isChecked()) {
-                        db.favoritoDao().favoritar(new Favorito(
-                                usuarioId,
-                                racaParaEditar.getId(),
-                                System.currentTimeMillis()
-                        ));
-                    } else {
-                        db.favoritoDao().desfavoritar(usuarioId, racaParaEditar.getId());
-                    }
-                    atualizarLista();
-                    Toast.makeText(this, "Ficha atualizada.", Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
+        Intent intent = new Intent(this, ActivityFichaRaca.class);
+        intent.putExtra("usuario_id", usuarioId);
+        intent.putExtra("raca_id", racaParaEditar.getId());
+        startActivity(intent);
     }
 
     private EditText criarCampo(LinearLayout formulario, String dica, String valor, boolean numerico) {
@@ -706,7 +644,7 @@ public class ActivityRacas extends AppCompatActivity {
 
     private void alternarFavoritos() {
         mostrandoFavoritos = !mostrandoFavoritos;
-        binding.btnFavoritos.setText(mostrandoFavoritos ? "Todos" : "Favoritos");
+        binding.btnFavoritos.setText(mostrandoFavoritos ? "Todos" : "Fav.");
         listaRacas = mostrandoFavoritos
                 ? db.favoritoDao().obterFavoritasDoUsuario(usuarioId)
                 : db.racasDao().obterTodasRacasDoUsuario(usuarioId);
@@ -816,9 +754,7 @@ public class ActivityRacas extends AppCompatActivity {
                     runOnUiThread(() -> Toast.makeText(this, "Imagem HTTPS inválida.", Toast.LENGTH_SHORT).show());
                     return;
                 }
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
-                imagemSelecionada = stream.toByteArray();
+                imagemSelecionada = ImageUtils.compressToJpeg(bitmap);
                 runOnUiThread(this::salvar);
             } catch (IOException e) {
                 runOnUiThread(() -> Toast.makeText(this, "Não foi possível baixar a imagem HTTPS.", Toast.LENGTH_SHORT).show());

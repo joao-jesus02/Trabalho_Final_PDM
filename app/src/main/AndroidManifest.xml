@@ -36,6 +36,12 @@
             android:name=".activities.ActivityRacas"
             android:exported="false" />
         <activity
+            android:name=".activities.ActivityFichaRaca"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ActivityPesquisaPersonagens"
+            android:exported="false" />
+        <activity
             android:name=".activities.ActivityRecuperarSenha"
             android:exported="false" />
         <activity
